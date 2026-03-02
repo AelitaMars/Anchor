@@ -20,7 +20,7 @@ const STATUS_CONFIG: Record<
   draft: { icon: FileText, color: "text-muted-foreground", label: "Draft" },
   sent: { icon: Clock, color: "text-amber-600", label: "Sent - Awaiting Response" },
   viewed: { icon: Eye, color: "text-blue-600", label: "Viewed by Client" },
-  accepted: { icon: CheckCircle2, color: "text-anchor-green", label: "Accepted agreement" },
+  accepted: { icon: CheckCircle2, color: "text-anchor-green", label: "Agreement" },
   declined: { icon: FileText, color: "text-destructive", label: "Declined" },
 }
 

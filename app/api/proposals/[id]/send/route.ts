@@ -4,7 +4,13 @@ import { getSession } from "@/lib/auth"
 import { Resend } from "resend"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const APP_URL = process.env.APP_URL ?? "http://localhost:3000"
+
+function getBaseUrl(req: NextRequest): string {
+  if (process.env.APP_URL) return process.env.APP_URL
+  const proto = req.headers.get("x-forwarded-proto") ?? "https"
+  const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "localhost:3000"
+  return `${proto}://${host}`
+}
 
 // ---------------------------------------------------------------------------
 // Inline price calculation (mirrors lib/pricing.ts, no import needed here)
@@ -115,7 +121,7 @@ export async function POST(_req: NextRequest, { params }: { params: Promise<{ id
     return NextResponse.json({ error: "Proposal has no acceptance token" }, { status: 400 })
   }
 
-  const acceptanceUrl = `${APP_URL}/client/proposals/${proposal.acceptanceToken}`
+  const acceptanceUrl = `${getBaseUrl(_req)}/client/proposals/${proposal.acceptanceToken}`
 
   // Parse services JSON for the email
   let services: ProposalService[] = []
