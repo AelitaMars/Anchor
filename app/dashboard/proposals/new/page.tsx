@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, Suspense } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useAppContext } from "@/lib/data-context"
 import type { Proposal, ProposalService, PricingParameter } from "@/lib/types"
 import { generateId, calculateDynamicPrice, formatCurrency } from "@/lib/pricing"
@@ -93,7 +93,6 @@ const DRAFT_KEY = "anchor_proposal_draft"
 /* ------------------------------------------------------------------ */
 function ProposalCreationContent() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { services, clients, addClient, addProposal, sendProposal, serviceToProposalService } =
     useAppContext()
 
@@ -161,7 +160,9 @@ function ProposalCreationContent() {
 
   // Handle addService from URL after creating a new service
   useEffect(() => {
-    const addServiceId = searchParams.get("addService")
+    if (typeof window === "undefined") return
+    const url = new URL(window.location.href)
+    const addServiceId = url.searchParams.get("addService")
     if (addServiceId) {
       const svc = services.find((s) => s.id === addServiceId)
       if (svc) {
@@ -171,11 +172,10 @@ function ProposalCreationContent() {
           return [...prev, ps]
         })
       }
-      const url = new URL(window.location.href)
       url.searchParams.delete("addService")
       window.history.replaceState({}, "", url.toString())
     }
-  }, [searchParams, services, serviceToProposalService])
+  }, [services, serviceToProposalService])
 
   const selectedClient = clients.find((c) => c.id === clientId)
 
