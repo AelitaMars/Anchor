@@ -1,0 +1,77 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id        String     @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  phone     String?
+  createdAt DateTime   @default(now())
+  proposals Proposal[]
+}
+
+model Service {
+  id                String   @id @default(cuid())
+  name              String
+  description       String?
+  billingOccurrence String
+  pricingType       String
+  setPricingMode    String?
+  fixedPrice        Float?
+  priceRangeMin     Float?
+  priceRangeMax     Float?
+  parameters        String   @default("[]")
+  discount          Float?
+  discountType      String?
+  billingTrigger    String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model PricingTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  parameters  String   @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Proposal {
+  id                         String    @id @default(cuid())
+  name                       String
+  clientId                   String?
+  client                     Client?   @relation(fields: [clientId], references: [id])
+  clientName                 String
+  clientEmail                String
+  effectiveDate              String
+  introductoryMessage        String?
+  paymentDueDays             Int?
+  processingFeePayer         String?
+  allowApproveWithoutPayment Boolean   @default(false)
+  allowManualApproval        Boolean   @default(false)
+  agreementTerm              String?
+  termEndDate                String?
+  services                   String    @default("[]")
+  status                     String    @default("draft")
+  acceptanceToken            String?   @unique
+  signedAt                   DateTime?
+  signedBy                   String?
+  createdAt                  DateTime  @default(now())
+  updatedAt                  DateTime  @updatedAt
+}
