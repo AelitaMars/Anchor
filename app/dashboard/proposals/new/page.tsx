@@ -171,6 +171,7 @@ function ProposalCreationContent() {
           if (prev.some((p) => p.serviceId === svc.id)) return prev
           return [...prev, ps]
         })
+        setExpandedService(addServiceId)
       }
       url.searchParams.delete("addService")
       window.history.replaceState({}, "", url.toString())
@@ -214,6 +215,7 @@ function ProposalCreationContent() {
       return
     }
     setProposalServices((prev) => [...prev, serviceToProposalService(svc)])
+    setExpandedService(serviceId)
     setShowAddService(false)
   }
 
@@ -227,10 +229,17 @@ function ProposalCreationContent() {
     serviceId: string,
     parameters: PricingParameter[]
   ) => {
+    const originalService = services.find((s) => s.id === serviceId)
+    const originalPrice = originalService
+      ? calculateDynamicPrice(originalService.parameters)
+      : 0
+    const newPrice = calculateDynamicPrice(parameters)
+    const overridden = newPrice !== originalPrice
+
     setProposalServices((prev) =>
       prev.map((ps) =>
         ps.serviceId === serviceId
-          ? { ...ps, parameters, overridden: true }
+          ? { ...ps, parameters, overridden }
           : ps
       )
     )
@@ -572,6 +581,9 @@ function ProposalCreationContent() {
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Services provided</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Select the pricing parameters you&apos;d like to offer this customer.
+            </p>
           </CardHeader>
           <CardContent>
             {/* Added services */}
