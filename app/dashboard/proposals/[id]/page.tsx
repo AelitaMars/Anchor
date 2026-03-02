@@ -31,7 +31,7 @@ export default function ProposalDetailPage({
 }) {
   const { id } = use(params)
   const router = useRouter()
-  const { proposals, updateProposal } = useAppContext()
+  const { proposals, updateProposal, services } = useAppContext()
   const proposal = proposals.find((p) => p.id === id)
 
   if (!proposal) {
@@ -58,8 +58,20 @@ export default function ProposalDetailPage({
   }
 
   const handleUpdateServiceParams = (serviceId: string, parameters: PricingParameter[]) => {
+    const originalService = services.find((s) => s.id === serviceId)
+    const overridden = originalService
+      ? parameters.some((param) => {
+          const originalParam = originalService.parameters.find((p) => p.id === param.id)
+          if (!originalParam) return true
+          return param.tiers.some((tier) => {
+            const originalTier = originalParam.tiers.find((t) => t.id === tier.id)
+            if (!originalTier) return true
+            return tier.value !== originalTier.value
+          })
+        })
+      : false
     const updatedServices = proposal.services.map((ps) =>
-      ps.serviceId === serviceId ? { ...ps, parameters, overridden: true } : ps
+      ps.serviceId === serviceId ? { ...ps, parameters, overridden } : ps
     )
     updateProposal({
       ...proposal,
