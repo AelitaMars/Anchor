@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+export const dynamic = "force-dynamic"
+
+import { Suspense, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAppContext } from "@/lib/data-context"
 import type { Service, PricingParameter } from "@/lib/types"
@@ -31,9 +33,11 @@ import { X, Save, BookmarkPlus, FolderOpen, DollarSign, Sliders, Clock, Package,
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 
+export const dynamic = "force-dynamic"
+
 type SetPricingMode = "fixed" | "hourly" | "per_unit" | "range"
 
-export default function NewServicePage() {
+function NewServicePageInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const returnTo = searchParams.get("returnTo")
@@ -601,5 +605,12 @@ export default function NewServicePage() {
         </Button>
       </div>
     </div>
+  )
+}
+export default function NewServicePage() {
+  return (
+    <Suspense fallback={null}>
+      <NewServicePageInner />
+    </Suspense>
   )
 }
