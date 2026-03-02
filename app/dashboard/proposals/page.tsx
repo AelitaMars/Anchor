@@ -38,7 +38,7 @@ const STATUS_LABELS: Record<string, string> = {
   draft: "Draft",
   sent: "Sent",
   viewed: "Viewed",
-  accepted: "Accepted agreement",
+  accepted: "Agreement",
   declined: "Declined",
 }
 
