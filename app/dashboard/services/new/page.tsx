@@ -88,11 +88,20 @@ function NewServicePageInner() {
       updatedAt: new Date().toISOString(),
     }
 
+    const returnTo =
+      typeof window !== "undefined"
+        ? new URL(window.location.href).searchParams.get("returnTo")
+        : null
+
     setSaving(true)
     try {
       await addService(service)
       toast.success("Service created successfully")
-      router.push("/dashboard/services")
+      if (returnTo) {
+        router.push(`${returnTo}?addService=${service.id}`)
+      } else {
+        router.push("/dashboard/services")
+      }
     } catch {
       toast.error("Failed to save service")
     } finally {
