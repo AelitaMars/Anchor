@@ -58,15 +58,18 @@ export default function ProposalDetailPage({
   }
 
   const handleUpdateServiceParams = (serviceId: string, parameters: PricingParameter[]) => {
-    const originalSvc = services.find((s) => s.id === serviceId)
-    const originalPrice = originalSvc
-      ? originalSvc.pricingType === "dynamic"
-        ? calculateDynamicPrice(originalSvc.parameters)
-        : originalSvc.fixedPrice ?? 0
-      : null
-    const newPrice = calculateDynamicPrice(parameters)
-    const overridden = originalPrice === null || newPrice !== originalPrice
-
+    const originalService = services.find((s) => s.id === serviceId)
+    const overridden = originalService
+      ? parameters.some((param) => {
+          const originalParam = originalService.parameters.find((p) => p.id === param.id)
+          if (!originalParam) return true
+          return param.tiers.some((tier) => {
+            const originalTier = originalParam.tiers.find((t) => t.id === tier.id)
+            if (!originalTier) return true
+            return tier.value !== originalTier.value
+          })
+        })
+      : false
     const updatedServices = proposal.services.map((ps) =>
       ps.serviceId === serviceId ? { ...ps, parameters, overridden } : ps
     )

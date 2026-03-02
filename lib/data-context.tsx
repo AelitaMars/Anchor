@@ -31,6 +31,7 @@ interface AppContextType {
 
   clients: Client[]
   addClient: (c: Client) => Promise<void>
+  deleteClient: (id: string) => Promise<void>
 
   generateId: () => string
   serviceToProposalService: (svc: Service) => ProposalService
@@ -180,6 +181,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setClients((prev) => [...prev, created])
   }, [])
 
+  const deleteClient = useCallback(async (id: string) => {
+    await apiFetch(`/api/clients/${id}`, { method: "DELETE" })
+    setClients((prev) => prev.filter((x) => x.id !== id))
+  }, [])
+
   // Helper: convert a service to a proposal-service snapshot
   const serviceToProposalService = useCallback((svc: Service): ProposalService => {
     return {
@@ -217,6 +223,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         deletePricingTemplate,
         clients,
         addClient,
+        deleteClient,
         generateId,
         serviceToProposalService,
         loading,

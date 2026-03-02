@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ChevronRight,
   LayoutTemplate,
+  Users,
 } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
@@ -32,6 +33,11 @@ const NAV_ITEMS = [
       { label: "All Services", href: "/dashboard/services" },
       { label: "Templates", href: "/dashboard/services/templates" },
     ],
+  },
+  {
+    label: "Clients",
+    href: "/dashboard/clients",
+    icon: Users,
   },
 ]
 
