@@ -34,6 +34,14 @@ const STATUS_STYLES: Record<string, string> = {
   declined: "bg-red-100 text-red-700 border-red-200",
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  draft: "Draft",
+  sent: "Sent",
+  viewed: "Viewed",
+  accepted: "Accepted agreement",
+  declined: "Declined",
+}
+
 export default function ProposalsPage() {
   const { proposals, deleteProposal, sendProposal } = useAppContext()
   const router = useRouter()
@@ -107,7 +115,7 @@ export default function ProposalsPage() {
                     {new Date(p.updatedAt).toLocaleDateString()}
                   </span>
                   <Badge variant="outline" className={STATUS_STYLES[p.status] || ""}>
-                    {p.status}
+                    {STATUS_LABELS[p.status] ?? p.status}
                   </Badge>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>

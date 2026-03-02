@@ -230,11 +230,19 @@ function ProposalCreationContent() {
     parameters: PricingParameter[]
   ) => {
     const originalService = services.find((s) => s.id === serviceId)
-    const originalPrice = originalService
-      ? calculateDynamicPrice(originalService.parameters)
-      : 0
-    const newPrice = calculateDynamicPrice(parameters)
-    const overridden = newPrice !== originalPrice
+    // Only mark overridden if the actual tier price VALUES have changed,
+    // not just because a different tier was selected
+    const overridden = originalService
+      ? parameters.some((param) => {
+          const originalParam = originalService.parameters.find((p) => p.id === param.id)
+          if (!originalParam) return true
+          return param.tiers.some((tier) => {
+            const originalTier = originalParam.tiers.find((t) => t.id === tier.id)
+            if (!originalTier) return true
+            return tier.value !== originalTier.value
+          })
+        })
+      : false
 
     setProposalServices((prev) =>
       prev.map((ps) =>

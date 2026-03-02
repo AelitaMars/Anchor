@@ -84,6 +84,7 @@ export type ProposalStatus = "draft" | "sent" | "viewed" | "accepted" | "decline
 
 export interface Proposal {
   id: string
+  acceptanceToken?: string
   name: string
   clientName: string
   clientEmail: string
