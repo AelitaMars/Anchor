@@ -20,7 +20,7 @@ const STATUS_CONFIG: Record<
   draft: { icon: FileText, color: "text-muted-foreground", label: "Draft" },
   sent: { icon: Clock, color: "text-amber-600", label: "Sent - Awaiting Response" },
   viewed: { icon: Eye, color: "text-blue-600", label: "Viewed by Client" },
-  accepted: { icon: CheckCircle2, color: "text-anchor-green", label: "Accepted & Signed" },
+  accepted: { icon: CheckCircle2, color: "text-anchor-green", label: "Accepted agreement" },
   declined: { icon: FileText, color: "text-destructive", label: "Declined" },
 }
 
@@ -107,8 +107,8 @@ export default function ProposalDetailPage({
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {(proposal.status === "sent" || proposal.status === "accepted") && (
-            <Link href={`/client/proposals/${proposal.id}`}>
+          {(proposal.status === "sent" || proposal.status === "accepted") && proposal.acceptanceToken && (
+            <Link href={`/client/proposals/${proposal.acceptanceToken}`}>
               <Button variant="outline" className="gap-2">
                 <Eye className="h-4 w-4" />
                 Client View
