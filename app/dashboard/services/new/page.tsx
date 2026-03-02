@@ -1,9 +1,7 @@
 "use client"
 
-export const dynamic = "force-dynamic"
-
 import { Suspense, useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { useAppContext } from "@/lib/data-context"
 import type { Service, PricingParameter } from "@/lib/types"
 import { generateId } from "@/lib/pricing"
@@ -39,8 +37,6 @@ type SetPricingMode = "fixed" | "hourly" | "per_unit" | "range"
 
 function NewServicePageInner() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const returnTo = searchParams.get("returnTo")
   const { addService, pricingTemplates, addPricingTemplate } = useAppContext()
 
   const [name, setName] = useState("")
@@ -96,11 +92,7 @@ function NewServicePageInner() {
     try {
       await addService(service)
       toast.success("Service created successfully")
-      if (returnTo) {
-        router.push(`${returnTo}?addService=${service.id}`)
-      } else {
-        router.push("/dashboard/services")
-      }
+      router.push("/dashboard/services")
     } catch {
       toast.error("Failed to save service")
     } finally {
