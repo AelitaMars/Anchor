@@ -31,7 +31,7 @@ export default function ProposalDetailPage({
 }) {
   const { id } = use(params)
   const router = useRouter()
-  const { proposals, updateProposal } = useAppContext()
+  const { proposals, updateProposal, services } = useAppContext()
   const proposal = proposals.find((p) => p.id === id)
 
   if (!proposal) {
@@ -58,8 +58,17 @@ export default function ProposalDetailPage({
   }
 
   const handleUpdateServiceParams = (serviceId: string, parameters: PricingParameter[]) => {
+    const originalSvc = services.find((s) => s.id === serviceId)
+    const originalPrice = originalSvc
+      ? originalSvc.pricingType === "dynamic"
+        ? calculateDynamicPrice(originalSvc.parameters)
+        : originalSvc.fixedPrice ?? 0
+      : null
+    const newPrice = calculateDynamicPrice(parameters)
+    const overridden = originalPrice === null || newPrice !== originalPrice
+
     const updatedServices = proposal.services.map((ps) =>
-      ps.serviceId === serviceId ? { ...ps, parameters, overridden: true } : ps
+      ps.serviceId === serviceId ? { ...ps, parameters, overridden } : ps
     )
     updateProposal({
       ...proposal,
