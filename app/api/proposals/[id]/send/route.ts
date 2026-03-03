@@ -6,10 +6,12 @@ import { Resend } from "resend"
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 function getBaseUrl(req: NextRequest): string {
-  const appUrl = process.env.APP_URL
-  if (appUrl) {
-    // Ensure it always has a scheme (handles misconfigured env vars like "app.splitartichoke.com")
-    return appUrl.startsWith("http") ? appUrl.replace(/\/$/, "") : `https://${appUrl.replace(/\/$/, "")}`
+  // Only trust APP_URL if it is a well-formed absolute URL (starts with http).
+  // Any other value (missing scheme, leading spaces/equals, etc.) is ignored so
+  // we fall back to the request headers, which Railway always sets correctly.
+  const appUrl = process.env.APP_URL?.trim()
+  if (appUrl?.startsWith("http")) {
+    return appUrl.replace(/\/$/, "")
   }
   const proto = req.headers.get("x-forwarded-proto") ?? "https"
   const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "localhost:3000"
