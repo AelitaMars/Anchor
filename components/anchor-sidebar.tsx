@@ -66,60 +66,59 @@ function ReviewerGuide() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="mx-2 mb-3 rounded-lg border border-white/10 bg-white/5 overflow-hidden">
+    <div className="mx-2 mb-3 rounded-lg border border-white/25 bg-white/10 overflow-hidden">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 w-full px-3 py-2.5 text-left"
+        className="flex items-center gap-2 w-full px-3 py-3 text-left"
       >
-        <Info className="h-3.5 w-3.5 text-white/50 shrink-0" />
-        <span className="flex-1 text-xs font-medium text-white/70">Reviewer Guide</span>
+        <Info className="h-3.5 w-3.5 text-white/80 shrink-0" />
+        <span className="flex-1 text-xs font-semibold text-white">Reviewer&apos;s Guide</span>
         {open ? (
-          <ChevronDown className="h-3 w-3 text-white/40 shrink-0" />
+          <ChevronDown className="h-3.5 w-3.5 text-white/60 shrink-0" />
         ) : (
-          <ChevronRight className="h-3 w-3 text-white/40 shrink-0" />
+          <ChevronRight className="h-3.5 w-3.5 text-white/60 shrink-0" />
         )}
       </button>
 
       {open && (
-        <div className="px-3 pb-3 space-y-3 border-t border-white/10 pt-2.5">
-          <p className="text-[11px] text-white/50 leading-relaxed">
+        <div className="px-3 pb-4 space-y-3.5 border-t border-white/20 pt-3">
+          <p className="text-xs text-white/75 leading-relaxed">
             Take-home prototype focused on{" "}
-            <span className="text-white/70 font-medium">Dynamic Pricing</span>.
+            <span className="text-white font-semibold">Dynamic Pricing</span>.
           </p>
 
           {/* Credentials */}
-          <div className="space-y-1.5">
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-white/40">
+          <div className="space-y-2">
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-white/60">
               Login credentials
             </p>
-            <div className="space-y-1">
-              <div className="flex items-center justify-between gap-1">
-                <span className="text-[10px] text-white/40 w-10 shrink-0">Email</span>
-                <span className="text-[10px] font-mono text-white/70 truncate flex-1">
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between gap-1.5">
+                <span className="text-xs text-white/60 w-10 shrink-0">Email</span>
+                <span className="text-[11px] font-mono text-white/90 truncate flex-1">
                   split.artichoke@gmail.com
                 </span>
                 <CopyButton value="split.artichoke@gmail.com" />
               </div>
-              <div className="flex items-center justify-between gap-1">
-                <span className="text-[10px] text-white/40 w-10 shrink-0">Pass</span>
-                <span className="text-[10px] font-mono text-white/70 flex-1">NUli@@2312</span>
+              <div className="flex items-center justify-between gap-1.5">
+                <span className="text-xs text-white/60 w-10 shrink-0">Pass</span>
+                <span className="text-[11px] font-mono text-white/90 flex-1">NUli@@2312</span>
                 <CopyButton value="NUli@@2312" />
               </div>
             </div>
           </div>
 
           {/* Steps */}
-          <div className="space-y-2 text-[11px] text-white/55 leading-relaxed">
+          <div className="space-y-2.5 text-xs text-white/75 leading-relaxed">
             <p>
-              <span className="text-white/70 font-medium">Sending a proposal: </span>
+              <span className="text-white font-semibold">Sending a proposal: </span>
               address it to{" "}
-              <span className="font-mono text-white/65">split.artichoke@gmail.com</span> (client
-              is already in the system).
+              <span className="font-mono text-white/90">split.artichoke@gmail.com</span>{" "}
+              (client already in the system).
             </p>
             <p>
-              <span className="text-white/70 font-medium">Reviewing: </span>
-              open the same Gmail inbox — same password as above — and sign the proposal from
-              the email link.
+              <span className="text-white font-semibold">Reviewing: </span>
+              open the same Gmail inbox — same password — and sign from the email link.
             </p>
           </div>
         </div>

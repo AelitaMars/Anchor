@@ -118,7 +118,7 @@ export default function LoginPage() {
                 when creating one, address it to{" "}
                 <span className="font-mono text-white/90">split.artichoke@gmail.com</span>.
                 The client is already in the system; feel free to delete and recreate it if you
-                want to test the full onboarding flow.
+                want to test the full flow from scratch.
               </div>
             </li>
 
@@ -136,8 +136,9 @@ export default function LoginPage() {
               <span className="flex items-center justify-center h-6 w-6 rounded-full bg-white/15 text-xs font-bold shrink-0 mt-0.5">4</span>
               <div className="text-white/70 leading-relaxed">
                 <span className="text-white font-semibold">No need to memorise any of this — </span>
-                these instructions are also available inside the app, in the left-hand navigation
-                panel.
+                these instructions are also available inside the app at the bottom of the
+                left-hand navigation panel, in the collapsible{" "}
+                <span className="text-white font-semibold">Reviewer&apos;s Guide</span>.
               </div>
             </li>
           </ol>
