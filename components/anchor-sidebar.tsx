@@ -10,6 +10,9 @@ import {
   ChevronRight,
   LayoutTemplate,
   Users,
+  Info,
+  Copy,
+  Check,
 } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
@@ -40,6 +43,90 @@ const NAV_ITEMS = [
     icon: Users,
   },
 ]
+
+function CopyButton({ value }: { value: string }) {
+  const [copied, setCopied] = useState(false)
+  return (
+    <button
+      onClick={() => {
+        navigator.clipboard.writeText(value).then(() => {
+          setCopied(true)
+          setTimeout(() => setCopied(false), 1500)
+        })
+      }}
+      className="opacity-50 hover:opacity-100 transition-opacity shrink-0"
+      title={`Copy ${value}`}
+    >
+      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+    </button>
+  )
+}
+
+function ReviewerGuide() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="mx-2 mb-3 rounded-lg border border-white/10 bg-white/5 overflow-hidden">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-2 w-full px-3 py-2.5 text-left"
+      >
+        <Info className="h-3.5 w-3.5 text-white/50 shrink-0" />
+        <span className="flex-1 text-xs font-medium text-white/70">Reviewer Guide</span>
+        {open ? (
+          <ChevronDown className="h-3 w-3 text-white/40 shrink-0" />
+        ) : (
+          <ChevronRight className="h-3 w-3 text-white/40 shrink-0" />
+        )}
+      </button>
+
+      {open && (
+        <div className="px-3 pb-3 space-y-3 border-t border-white/10 pt-2.5">
+          <p className="text-[11px] text-white/50 leading-relaxed">
+            Take-home prototype focused on{" "}
+            <span className="text-white/70 font-medium">Dynamic Pricing</span>.
+          </p>
+
+          {/* Credentials */}
+          <div className="space-y-1.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-white/40">
+              Login credentials
+            </p>
+            <div className="space-y-1">
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] text-white/40 w-10 shrink-0">Email</span>
+                <span className="text-[10px] font-mono text-white/70 truncate flex-1">
+                  split.artichoke@gmail.com
+                </span>
+                <CopyButton value="split.artichoke@gmail.com" />
+              </div>
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[10px] text-white/40 w-10 shrink-0">Pass</span>
+                <span className="text-[10px] font-mono text-white/70 flex-1">NUli@@2312</span>
+                <CopyButton value="NUli@@2312" />
+              </div>
+            </div>
+          </div>
+
+          {/* Steps */}
+          <div className="space-y-2 text-[11px] text-white/55 leading-relaxed">
+            <p>
+              <span className="text-white/70 font-medium">Sending a proposal: </span>
+              address it to{" "}
+              <span className="font-mono text-white/65">split.artichoke@gmail.com</span> (client
+              is already in the system).
+            </p>
+            <p>
+              <span className="text-white/70 font-medium">Reviewing: </span>
+              open the same Gmail inbox — same password as above — and sign the proposal from
+              the email link.
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
 
 function AnchorLogo() {
   return (
@@ -136,6 +223,9 @@ export function AnchorSidebar() {
           )
         })}
       </nav>
+
+      {/* Reviewer Guide pinned to the bottom of the sidebar */}
+      <ReviewerGuide />
     </aside>
   )
 }
