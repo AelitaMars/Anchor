@@ -49,6 +49,17 @@ export default function ProposalDetailPage({
   const StatusIcon = statusConfig.icon
 
   const handleSend = () => {
+    // Require at least one parameter option to be selected for dynamic-pricing services
+    const unselectedService = proposal.services.find(
+      (ps) =>
+        ps.pricingType === "dynamic" &&
+        ps.parameters.length > 0 &&
+        !ps.parameters.some((p) => !!p.selectedTierId)
+    )
+    if (unselectedService) {
+      toast.error(`Select at least one option for "${unselectedService.name}"`)
+      return
+    }
     updateProposal({
       ...proposal,
       status: "sent",
@@ -59,8 +70,10 @@ export default function ProposalDetailPage({
 
   const handleUpdateServiceParams = (serviceId: string, parameters: PricingParameter[]) => {
     const originalService = services.find((s) => s.id === serviceId)
+    // Mark overridden when tier VALUES change OR when parameters are removed
     const overridden = originalService
-      ? parameters.some((param) => {
+      ? parameters.length !== originalService.parameters.length ||
+        parameters.some((param) => {
           const originalParam = originalService.parameters.find((p) => p.id === param.id)
           if (!originalParam) return true
           return param.tiers.some((tier) => {
@@ -180,6 +193,17 @@ export default function ProposalDetailPage({
                           Overridden
                         </Badge>
                       )}
+                      {proposal.status === "draft" &&
+                        ps.pricingType === "dynamic" &&
+                        ps.parameters.length > 0 &&
+                        !ps.parameters.some((p) => !!p.selectedTierId) && (
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] text-amber-600 border-amber-300"
+                          >
+                            Select options
+                          </Badge>
+                        )}
                     </div>
                   </div>
                 </CardHeader>

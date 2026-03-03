@@ -230,10 +230,10 @@ function ProposalCreationContent() {
     parameters: PricingParameter[]
   ) => {
     const originalService = services.find((s) => s.id === serviceId)
-    // Only mark overridden if the actual tier price VALUES have changed,
-    // not just because a different tier was selected
+    // Mark overridden when tier VALUES change OR when parameters are removed
     const overridden = originalService
-      ? parameters.some((param) => {
+      ? parameters.length !== originalService.parameters.length ||
+        parameters.some((param) => {
           const originalParam = originalService.parameters.find((p) => p.id === param.id)
           if (!originalParam) return true
           return param.tiers.some((tier) => {
@@ -263,6 +263,19 @@ function ProposalCreationContent() {
     }
     if (!clientId) {
       toast.error("Please select a client")
+      return
+    }
+
+    // Require at least one parameter option to be selected for dynamic-pricing services
+    const unselectedService = proposalServices.find(
+      (ps) =>
+        ps.pricingType === "dynamic" &&
+        ps.parameters.length > 0 &&
+        !ps.parameters.some((p) => !!p.selectedTierId)
+    )
+    if (unselectedService) {
+      toast.error(`Select at least one option for "${unselectedService.name}"`)
+      setExpandedService(unselectedService.serviceId)
       return
     }
 
@@ -641,6 +654,16 @@ function ProposalCreationContent() {
                                   Overridden
                                 </Badge>
                               )}
+                              {ps.pricingType === "dynamic" &&
+                                ps.parameters.length > 0 &&
+                                !ps.parameters.some((p) => !!p.selectedTierId) && (
+                                  <Badge
+                                    variant="outline"
+                                    className="text-[10px] px-1.5 py-0 text-amber-600 border-amber-300"
+                                  >
+                                    Select options
+                                  </Badge>
+                                )}
                             </div>
                           </div>
                         </div>
